@@ -1,0 +1,43 @@
+#!/bin/sh
+
+
+mkdir -p /proc /sys /dev /sys/firmware/efi/efivars
+
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mount -t devtmpfs dev /dev
+
+mount -t efivarfs efivarfs /sys/firmware/efi/efivars 2>/dev/null
+
+printf 'UL0\r\n' >/dev/ttyu0 2>/dev/null || true
+printf 'UL0\r\n' >/dev/ttyS0 2>/dev/null || true
+printf 'UL0\r\n' >/dev/console 2>/dev/null || true
+
+# DEBUG: Check if the EFI system table actually exists
+if [ -d /sys/firmware/efi ]; then
+    echo "--- EFI Directory Found ---"
+    ls -R /sys/firmware/efi
+else
+    echo "--- CRITICAL: /sys/firmware/efi NOT FOUND ---"
+fi
+
+
+echo "=== Running zjudo with output capture ==="
+
+BOOTVERBOSE="${BOOTVERBOSE:-NO}"
+HOWTO_FLAGS="${HOWTO_FLAGS:-4096}"
+
+zjudo boot \
+  --debug --force \
+  --howto "${HOWTO_FLAGS}" \
+  --kernel boot/kernel/kernel \
+  --mfsroot /lib/mfsroot.img \
+  --modules boot/kernel/opensolaris.ko \
+  --modules boot/kernel/xdr.ko \
+  --modules boot/kernel/zlib.ko \
+  --modules boot/kernel/crypto.ko \
+  --modules boot/kernel/aesni.ko \
+  --modules boot/kernel/acl_nfs4.ko \
+  --modules boot/kernel/zfs.ko \
+  -C "bootverbose=${BOOTVERBOSE} ${SMP_ARGS} debug.kld=1 debug.linker=1 hint.uart.0.at=isa hint.uart.0.flags=0x10 hint.uart.0.irq=4 hint.uart.0.port=0x3f8 hint.psm.0.disabled=1 hint.ahcich.1.disabled=1 hint.ahcich.2.disabled=1 hint.ahcich.3.disabled=1 hint.ahcich.4.disabled=1 hint.ahcich.5.disabled=1 hint.ahcich.6.disabled=1 hint.ahcich.7.disabled=1 hint.ahcich.8.disabled=1 hint.ahcich.9.disabled=1 hint.ahcich.10.disabled=1 hint.ahcich.11.disabled=1 init_path=/sbin/init kern.elf64.aslr.enable=0 vfs.root.mountfrom=ufs:/dev/md0 zjudo.skip_gwaitidle=1 zjudo.trace_bus=0 zjudo.trace_doreti=0 zjudo.trace_first_intr=0 zjudo.trace_fork=0 zjudo.trace_fork_tramp=0 zjudo.trace_kproc=0 zjudo.trace_lowlevel=0 zjudo.trace_module=0 zjudo.trace_pmap=0 zjudo.trace_smp=0 zjudo.trace_thread=0 zjudo.trace_vm=0 zjudo.trace_vt=0 zjudo.trace_vt_min=0"
+

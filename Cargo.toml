@@ -1,0 +1,52 @@
+[package]
+name = "zjudo"
+version = "0.1.0"
+edition = "2024"
+description = "A Rust UEFI app to boot FreeBSD from Linux using kexec"
+authors = ["Yassine Labidi"]
+license = "MIT"
+repository = ""
+
+[features]
+default = []
+debug = []  # Enable additional debugging output
+static = [] # Build statically linked binary
+
+[dependencies]
+# Core dependencies
+anyhow = "1.0"           # Error handling
+thiserror = "1.0"        # Custom error types
+log = "0.4"              # Logging facade
+env_logger = "0.11"      # Logging implementation
+tracing = "0.1"          # Structured logging
+clap = { version = "4.0", features = ["derive", "env"] } # CLI parsing
+serde = { version = "1.0", features = ["derive"] } # Serialization
+bytes = "1.0"            # Byte buffer utilities
+
+# System and low-level dependencies
+nix = "0.27"             # Unix system calls
+libc = "0.2"             # C library bindings
+memmap2 = "0.9"          # Memory mapping
+object = "0.32"          # ELF parsing (alternative to goblin)
+goblin = "0.7"           # ELF/PE/Mach-O parsing
+bitflags = "2.0"         # Bit flags
+
+# Compression
+flate2 = "1.0"           # gzip decompression for fonts
+
+# Optional: Assembly generation
+# dynasm = "0.3"          # Dynamic assembly generation (if needed)
+
+[dev-dependencies]
+tempfile = "3.0"         # Temporary files for testing
+assert_cmd = "2.0"       # Command assertion
+predicates = "3.0"       # Predicate assertions
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+
+[profile.dev]
+opt-level = 0
+debug = true

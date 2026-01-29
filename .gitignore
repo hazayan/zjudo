@@ -1,0 +1,17 @@
+.idea/
+.rules/
+.vscode/
+.cursorrules/
+.vscode/
+.idea/
+
+dev/
+tmp/
+live/
+target/
+
+*.md
+*.sh
+*.log
+
+!README.md
