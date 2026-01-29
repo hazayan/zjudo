@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 description = "A Rust UEFI app to boot FreeBSD from Linux using kexec"
 authors = ["Yassine Labidi"]
-license = "MIT"
+license = "GPL-3.0-or-later"
 repository = ""
 
 [features]
