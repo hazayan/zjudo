@@ -1,0 +1,2 @@
+[00001] [2026-06-29T22:45:56Z] [IMPLEMENTATION] Removed stale Beads-era agent ignore metadata and obsolete git-crypt attributes from repository metadata.
+[00002] [2026-06-29T22:49:26Z] [CI] Wired Forgejo tag source releases to consume Forge organization signing secrets and publish archives with SHA-256 checksums.

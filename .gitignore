@@ -15,6 +15,3 @@ target/
 *.log
 
 !README.md
-AGENTS.md
-CLAUDE.md
-.claude/
